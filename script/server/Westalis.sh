@@ -8,7 +8,7 @@ wait
 echo 'INTERFACES="eth0"' > '/etc/default/isc-dhcp-server'
 
 echo 'subnet 10.25.2.0 netmask 255.255.255.0 {
-} #kalo gk ada ini error
+} #kalo gk ada ini service restart error
 
 subnet 10.25.1.0 netmask 255.255.255.0 {
     range 10.25.1.50 10.25.1.88;
@@ -32,6 +32,11 @@ subnet 10.25.3.0 netmask 255.255.255.0 {
 
     default-lease-time 600; 
     max-lease-time 6900; 
+}
+
+host Eden {
+    hardware ethernet d6:10:58:ba:a6:a4;
+    fixed-address 10.25.3.13;
 }' > '/etc/dhcp/dhcpd.conf'
 
 service isc-dhcp-server restart
