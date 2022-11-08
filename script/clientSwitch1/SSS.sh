@@ -4,6 +4,9 @@ apt-get update &
 wait
 apt-get install lynx -y &
 wait
+apt-get install speedtest-cli &
+wait
+export PYTHONHTTPSVERIFY=0
 
 echo '#auto eth0
 #iface eth0 inet static
