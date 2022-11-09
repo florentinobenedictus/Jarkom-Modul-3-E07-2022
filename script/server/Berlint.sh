@@ -21,16 +21,16 @@ acl WEEKEND time SA 00:00-23:59
 #acl Safe_Ports port 443 # https
 #acl CONNECT method CONNECT
 
-# delay_pools 2
-# delay_class 1 2
+delay_pools 1 #
+delay_class 1 2
 # delay_class 2 2
 
-# delay_access 1 AVAILABLE_WORKING
-# delay_parameters 2 none none
-# delay_access 1 deny all
+delay_access 1 allow WEEKEND
+delay_parameters 1 none 16000/16000
+delay_access 1 deny all
 
-# delay_access 2 WEEKEND
-# delay_parameters 2 none 8000/16000
+# delay_access 2 WEEKDAY_NWORK
+# delay_parameters 2 none 16000/16000
 # delay_access 2 deny all
 
 
