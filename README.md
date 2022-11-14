@@ -63,3 +63,11 @@ iface eth0 inet static
 auto eth0
 iface eth0 inet dhcp
 ```
+3. Lakukan `iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 10.25.0.0/16` pada router
+4. Lakukan `echo nameserver 192.168.122.1 > /etc/resolv.conf` pada node selain router
+5. Lakukan `apt-get update` kemudian lakukan `apt-get install bind 9-y` pada WISE
+6. lakukan `apt-get update` kemudian lakukan `apt-get install isc-dhcp-server -y` pada Westalis kemudian lakukan konfigurasi pada `/etc/default/isc-dhcp-server` dengan format sebagai berikut :
+```
+
+
+
