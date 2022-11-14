@@ -84,3 +84,27 @@ OPTIONS=""
 ```
 3. Lakukan `service isc-dhcp-relay restart`
 
+## Soal 3
+Client yang melalui Switch1 mendapatkan range IP dari [prefix IP].1.50 - [prefix IP].1.88 dan [prefix IP].1.120 - [prefix IP].1.155 (3)
+
+### Jawaban
+1. Lakukan konfigurasi file `/etc/dhcp/dhcpd.conf`pada Westalis dengan melakukan :
+```
+subnet 10.25.2.0 netmask 255.255.255.0 {
+} #kalo gk ada ini service restart error
+subnet 10.25.1.0 netmask 255.255.255.0 {
+    range 10.25.1.50 10.25.1.88;
+    range 10.25.1.120 10.25.1.155;
+    option routers 10.25.1.1;
+    option broadcast-address 10.25.1.255;
+    option domain-name-servers 10.25.2.2;
+    default-lease-time 300;
+    max-lease-time 6900;
+}
+```
+2. Lalu lakukan `service isc-dhcp-server restart`
+
+## Soal 4
+Client yang melalui Switch3 mendapatkan range IP dari [prefix IP].3.10 - [prefix IP].3.30 dan [prefix IP].3.60 - [prefix IP].3.85
+
+
