@@ -98,8 +98,8 @@ subnet 10.25.1.0 netmask 255.255.255.0 {
     option routers 10.25.1.1;
     option broadcast-address 10.25.1.255;
     option domain-name-servers 10.25.2.2;
-    default-lease-time 300;
-    max-lease-time 6900;
+    default-lease-time 360;
+    max-lease-time 7200;
 }
 ```
 2. Lalu lakukan `service isc-dhcp-server restart`
@@ -115,8 +115,8 @@ subnet 10.25.3.0 netmask 255.255.255.0 {
     option routers 10.25.3.1;
     option broadcast-address 10.25.3.255;
     option domain-name-servers 10.25.2.2; 
-    default-lease-time 600; 
-    max-lease-time 6900; 
+    default-lease-time 360; 
+    max-lease-time 7200; 
 }
 ```
 2. Lalu lakukan `service isc-dhcp-server restart`
@@ -137,4 +137,79 @@ dan comment bagian
 ```
 2. Lakukan `service bind9 restart`
 3. Edit file `/etc/dhcp/dhcpd.conf` pada Westalis dengan menambahkan `option domain-name-servers "IP WISE"` pada `subnet 10.25.2.0` dan `subnet 10.25.3.0`
+## Soal 6
+Lama waktu DHCP server meminjamkan alamat IP kepada Client yang melalui Switch1 selama 5 menit sedangkan pada client yang melalui Switch3 selama 10 menit. Dengan waktu maksimal yang dialokasikan untuk peminjaman alamat IP selama 115 menit. (6)
+### Jawaban
+1. Lakukan konfigurasi pada `/etc/dhcp/dhcpd.conf`pada Westalis yang dimana default-lease time dan max lease timenya diganti menjadi sebagai berikut
+```bash
+subnet 10.25.2.0 netmask 255.255.255.0 {
+} #kalau tidak ada ini service restart error
+#untuk switch 1
+subnet 10.25.1.0 netmask 255.255.255.0 {
+    range 10.25.1.50 10.25.1.88;
+    range 10.25.1.120 10.25.1.155;
+    option routers 10.25.1.1;
+    option broadcast-address 10.25.1.255;
+    option domain-name-servers 10.25.2.2;
+    default-lease-time 300;
+    max-lease-time 6900;
+}
+#dan untuk switch 3
+subnet 10.25.3.0 netmask 255.255.255.0 {
+    range 10.25.3.10 10.25.3.30;
+    range 10.25.3.60 10.25.3.85;
+    option routers 10.25.3.1;
+    option broadcast-address 10.25.3.255;
+    option domain-name-servers 10.25.2.2; 
+    default-lease-time 600; 
+    max-lease-time 6900; 
+}
+```
+2. Lalu lakukan service isc-dhcp-server restart
+## Soal 7
+## Soal Proxy
 
+## 8.1
+Client hanya dapat mengakses internet diluar (selain) hari & jam kerja (senin-jumat 08.00 - 17.00) dan hari libur (dapat mengakses 24 jam penuh)\
+###  Jawaban
+1. Lakukan `apt-get update` dan `apt-get install squid -y`
+2. Lakukan `mv /etc/squid/squid.conf /etc/squid/squid.conf.bak`
+3. Buat konfigurasi acl untuk waktu yang bisa diakses di '/etc/squid/squid.conf' menjadi sebagai berikut
+```
+acl WEEKDAY_WORK time MTWHF 08:00-17:00
+acl WEEKDAY_NWORK time MTWHF 00:00-07:59
+acl WEEKDAY_NWORK time MTWHF 17:01-23:59
+acl WEEKEND time SA 00:00-23:59
+``` 
+3. lalu memnbuat konfigurasi untuk http_accessnya menjadi berikut
+```
+http_access allow WEEKDAY_NWORK
+http_access allow WEEKEND
+http_access deny all
+```
+4. Lakukan `service squid restart`
+5. Lakukan `export http_proxy="http://10.25.2.3:5000"` di node SSS
+6. Test menggunakan lynx ke domain apapun
+### Hasil
+
+
+
+## 8.2
+Adapun pada hari dan jam kerja sesuai nomor (1), client hanya dapat mengakses domain loid-work.com dan franky-work.com (IP tujuan domain dibebaskan)
+### Jawaban
+1. Buat konfigurasi di `/etc/squid/restrict-sites.acl` dengan menambahkan loid-work.com dan franky-work.com 
+2. di  '/etc/squid/squid.conf' ditambahkan acl `acl WHITELIST dstdomain "/etc/squid/restrict-sites.acl"` agar dapat mengakses domain tersebut
+3. agar domain tersebut bisa dipakai saat jam kerja ditambahkan juga http_access menjadi seperti berikut
+```
+http_access allow WHITELIST WEEKDAY_WORK
+http_access deny WHITELIST WEEKDAY_NWORK
+http_access deny WHITELIST WEEKEND
+```
+4. Lakukan `service squid restart`
+5. Lakukan `export http_proxy="http://10.25.2.3:5000"` lagi di node SSS
+## 8.3
+## 8.4
+## 8.5
+
+## Kendala
+- bisa mendeny http tetapi tidak bisa mengatur https agar tidak bisa diakses
