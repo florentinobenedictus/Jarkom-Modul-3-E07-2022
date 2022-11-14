@@ -124,6 +124,17 @@ subnet 10.25.3.0 netmask 255.255.255.0 {
 ## Soal 5
 Client mendapatkan DNS dari WISE dan client dapat terhubung dengan internet melalui DNS tersebut.
 ### Jawaban
-
-
+1. Lakukan konfigurasi pada `etc/bind/named.conf.options` dengan menambahkan :
+```
+forwarders {
+                192.168.122.1;
+        };
+	allow-query{any;};
+```
+dan comment bagian 
+```
+// dnssec-validation auto;
+```
+2. Lakukan `service bind9 restart`
+3. Edit file `/etc/dhcp/dhcpd.conf` pada Westalis dengan menambahkan `option domain-name-servers "IP WISE"` pada `subnet 10.25.2.0` dan `subnet 10.25.3.0`
 
