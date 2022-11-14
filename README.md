@@ -43,6 +43,7 @@ iface eth0 inet static
 	gateway 10.25.2.1
 ```
 - Berlint
+```
 auto eth0
 iface eth0 inet static
 	address 10.25.2.3
