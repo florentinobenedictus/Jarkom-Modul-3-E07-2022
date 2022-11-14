@@ -69,5 +69,18 @@ iface eth0 inet dhcp
 6. lakukan `apt-get update` kemudian lakukan `apt-get install isc-dhcp-server -y` pada Westalis kemudian lakukan konfigurasi pada `INTERFACES` pada `/etc/default/isc-dhcp-server` dengan menambahkan `eth0`
 7. lakukan `apt-get update` kemudian lakukan `apt-get install squid -y` pada Berlint
 
-
+## Soal 2
+Ostania sebagai DHCP Relay
+### Jawaban
+1. Lakukan command `apt-get update` kemudian `apt-get install isc-dhcp-relay -y` pada Ostania
+2. Lakukan konfigurasi pada `/etc/default/isc-dhcp-relay` :
+```
+# What servers should the DHCP relay forward requests to?
+SERVERS="10.25.`2.4"
+# On what interfaces should the DHCP relay (dhrelay) serve DHCP requests?
+INTERFACES="eth1 eth2 eth3"
+# Additional options that are passed to the DHCP relay daemon?
+OPTIONS=""
+```
+3. Lakukan `service isc-dhcp-relay restart`
 
